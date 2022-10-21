@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 function App() {
    const editor = useRef(null);
    const [image, setImage] = useState("");
+   const [data, setData] = useState(false);
    const [scale, setScale] = useState(1.08);
 
    const submitHandle = async (e) => {
@@ -26,13 +27,14 @@ function App() {
             .then((result) => {
                toast.success(result.data.message);
                console.log(result.data);
+               setData(result.data.imgData);
             })
             .catch((err) => toast.error(err.message));
       }
    };
    return (
       <>
-         <div className='h-full grid place-items-center '>
+         <div className='h-full flex justify-center items-center gap-10'>
             <form onSubmit={submitHandle} className=''>
                {image && (
                   <div className=''>
@@ -196,13 +198,24 @@ function App() {
                      </Dropzone>
                   </div>
                )}
-               <div className=''>
-                  <input
-                     onChange={(e) => {
-                        setImage(e.target.files[0]);
-                     }}
-                     type='file'
-                  />
+               <div
+                  style={
+                     image ? {} : { borderTop: "1px solid #222", borderRadius: "3px" }
+                  }
+                  className='flex p-2 justify-between bg-[#4169e1] border-b border-[#222] border-x rounded-b gap-5'>
+                  <div className='flex items-center'>
+                     <label className='px-4 rounded py-1 bg-white' htmlFor='inputFile'>
+                        Chose File
+                     </label>
+                     <input
+                        className='hidden'
+                        id='inputFile'
+                        onChange={(e) => {
+                           setImage(e.target.files[0]);
+                        }}
+                        type='file'
+                     />
+                  </div>
                   <input
                      type='range'
                      min={40}
@@ -212,9 +225,41 @@ function App() {
                         setScale(e.target.value / 50);
                      }}
                   />
-                  <button type='submit'>Send</button>
+                  <button className='px-4 rounded py-1 bg-white' type='submit'>
+                     Send
+                  </button>
                </div>
             </form>
+            {data && (
+               <ul className='flex flex-col p-5 rounded text-white gap-2'>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>İsim:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>{data.ad}</span>
+                  </li>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>Soyad:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>{data.soyad}</span>
+                  </li>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>Doğum Yılı:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>{data.dogumYili}</span>
+                  </li>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>TC No:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>{data.tcno}</span>
+                  </li>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>Seri No:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>{data.seriNo}</span>
+                  </li>
+                  <li className='flex gap-2 px-2 justify-between rounded-sm py-1 bg-indigo-500'>
+                     <span>Son Geçerlilik:</span>
+                     <span className='bg-pink-500 px-2 rounded-sm'>
+                        {data.sonGecerlilik}
+                     </span>
+                  </li>
+               </ul>
+            )}
          </div>
          <Toaster position='top-left' reverseOrder={false} />
       </>

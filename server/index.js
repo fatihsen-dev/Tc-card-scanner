@@ -42,12 +42,9 @@ app.post("/", async (req, res) => {
             .then(async (result) => {
                var spaceTotal = "",
                   totalText = "";
-
                const splitLine = result.data.text.split("—");
                splitLine.forEach((text) => (spaceTotal += text));
-
                const splitSpace = spaceTotal.split("\n");
-               console.log(splitSpace);
                splitSpace.forEach((text) => (totalText += text));
 
                fs.writeFile("./data/test.txt", totalText, (err) => {
@@ -56,7 +53,7 @@ app.post("/", async (req, res) => {
                   }
                   res.status(200).json({
                      message: "Gönderme başarılı",
-                     testData: {
+                     imgData: {
                         tcno: splitSpace[0],
                         soyad: splitSpace[1],
                         ad: splitSpace[2],
